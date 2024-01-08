@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[OperationType]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL, 
+	[Description] NVARCHAR(100) NOT NULL	
+
+	CONSTRAINT [PK_OperationId] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
