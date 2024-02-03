@@ -1,7 +1,12 @@
+using MoneyBudgets.Interfaces;
+using MoneyBudgets.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IAccountTypeService,AccountTypeService>();
 
 var app = builder.Build();
 

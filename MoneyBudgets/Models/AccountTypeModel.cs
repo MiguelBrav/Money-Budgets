@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MoneyBudgets.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoneyBudgets.Models
 {
@@ -7,9 +8,12 @@ namespace MoneyBudgets.Models
         public int Id { get; set; }
 
         [Required]
+        [FirstCapitalLetter]
         public string Name { get; set; }
         public int UserId { get; set; }
         public int Order { get; set; }
+
   
+
     }
 }
