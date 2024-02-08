@@ -17,15 +17,15 @@ namespace MoneyBudgets.Services
             _connectionString = _configuration.GetConnectionString("SqlServerConnection");
         }
 
-        public void AddAccountType(AccountTypeModel account)
+        public async Task AddAccountType(AccountTypeModel account)
         {
-            SqlConnection connection = new SqlConnection(_connectionString); 
+            SqlConnection connection = new SqlConnection(_connectionString);
 
             try
-            {               
+            {
                 connection.Open();
 
-                var id = connection.QuerySingle<int>(
+                var id = await connection.QuerySingleAsync<int>(
                     @"INSERT INTO AccountType ([Name], [UserId], [Order]) VALUES (@Name, @UserId, 0); SELECT SCOPE_IDENTITY();", account);
 
                 account.Id = id;
@@ -39,6 +39,27 @@ namespace MoneyBudgets.Services
                 connection.Dispose();
             }
 
+        }
+
+        public async Task<bool> ExistsAccount(string accountName, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var exists = await connection.QueryFirstOrDefaultAsync<int>(
+                        @"SELECT 1 FROM AccountType WHERE Name = @Name AND UserId = @UserId",
+                        new { Name = accountName, UserId = userId });
+
+                    return exists == 1;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
     }
 }

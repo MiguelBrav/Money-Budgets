@@ -4,6 +4,8 @@ namespace MoneyBudgets.Interfaces
 {
     public interface IAccountTypeService
     {
-        public void AddAccountType(AccountTypeModel account);
+        public Task AddAccountType(AccountTypeModel account);
+
+        public Task<bool> ExistsAccount(string accountName, int userId);
     }
 }

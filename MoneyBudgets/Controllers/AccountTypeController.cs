@@ -21,7 +21,7 @@ namespace MoneyBudgets.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(AccountTypeModel account)
+        public async Task<IActionResult> Create(AccountTypeModel account)
         {
             if (!ModelState.IsValid)
             {
@@ -31,7 +31,16 @@ namespace MoneyBudgets.Controllers
             // TODO- Make users and quit this mock example
             account.UserId = 1;
 
-            _accountTypeService.AddAccountType(account);
+            bool exists = await _accountTypeService.ExistsAccount(account.Name,account.UserId);
+
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(account.Name), $"Account type {account.Name} already exists");
+
+                return View(account);
+            }
+
+            await _accountTypeService.AddAccountType(account);
 
             return View();
         }
