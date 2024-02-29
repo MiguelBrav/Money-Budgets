@@ -61,5 +61,26 @@ namespace MoneyBudgets.Services
                 }
             }
         }
+
+        public async Task<List<AccountTypeModel>> GetAccountsbyUser(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var accounts = await connection.QueryAsync<AccountTypeModel>(
+                        @"SELECT [Id],[Name],[UserId],[Order] FROM AccountType WHERE UserId = @UserId",
+                        new { UserId = userId });
+
+                    return accounts.ToList();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
     }
 }

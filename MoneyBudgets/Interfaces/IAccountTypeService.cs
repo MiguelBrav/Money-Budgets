@@ -7,5 +7,6 @@ namespace MoneyBudgets.Interfaces
         public Task AddAccountType(AccountTypeModel account);
 
         public Task<bool> ExistsAccount(string accountName, int userId);
+        public Task<List<AccountTypeModel>> GetAccountsbyUser(int userId);
     }
 }

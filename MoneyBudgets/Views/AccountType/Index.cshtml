@@ -1,0 +1,42 @@
+﻿@model List<AccountTypeModel>
+
+@{
+    ViewData["Title"] = "Account Types";
+}
+
+<h1>Account Types</h1>
+<h5>The type of account refers to how we can group them, for example: debit, credit card, etc.</h5>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Create new</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            Actions
+        </th>
+        <th>
+            Name
+        </th>
+            </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model)
+        {
+            <tr>
+                <td>
+                    <a class="btn btn-primary">
+                        Edit
+                    </a>
+                       <a class="btn btn-danger">
+                        Delete
+                    </a>
+                </td>
+                <td>
+                    @account.Name
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

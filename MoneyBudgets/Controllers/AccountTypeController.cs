@@ -9,15 +9,26 @@ namespace MoneyBudgets.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountTypeService _accountTypeService;
-        public AccountTypeController(ILogger<HomeController> logger, IAccountTypeService accountTypeService)
+        private readonly IUsersService _usersService;
+        public AccountTypeController(ILogger<HomeController> logger, IAccountTypeService accountTypeService, IUsersService usersService)
         {
             _logger = logger;
             _accountTypeService = accountTypeService;
+            _usersService = usersService;
         }
 
         public IActionResult Create()
         {
             return View();
+        }
+
+        public async Task<IActionResult> IndexAsync()
+        {
+            var id = _usersService.GetUserId();
+            var accountTypes = await _accountTypeService.GetAccountsbyUser(id);
+
+
+            return View(accountTypes);
         }
 
         [HttpPost]
@@ -29,7 +40,7 @@ namespace MoneyBudgets.Controllers
 
             }
             // TODO- Make users and quit this mock example
-            account.UserId = 1;
+            account.UserId = _usersService.GetUserId();
 
             bool exists = await _accountTypeService.ExistsAccount(account.Name,account.UserId);
 
@@ -42,7 +53,22 @@ namespace MoneyBudgets.Controllers
 
             await _accountTypeService.AddAccountType(account);
 
-            return View();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> ValidateIfExists(string name)
+        {
+            // TODO- Make users and quit this mock example
+            var id = _usersService.GetUserId();
+            var existsAccount = await _accountTypeService.ExistsAccount(name, id);
+
+            if(existsAccount) {
+                return Json($"Name {name} already exists");
+            }
+
+            return Json(true);
         }
 
     }

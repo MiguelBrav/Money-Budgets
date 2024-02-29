@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IAccountTypeService,AccountTypeService>();
+builder.Services.AddTransient<IUsersService, UsersService>();
 
 var app = builder.Build();
 
