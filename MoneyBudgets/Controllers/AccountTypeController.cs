@@ -71,5 +71,38 @@ namespace MoneyBudgets.Controllers
             return Json(true);
         }
 
+        [HttpGet]
+
+        public async Task<IActionResult> Edit(int id)
+        {
+          
+            var userId = _usersService.GetUserId();
+            var accounttype = await _accountTypeService.GetAccountbyUserAndId(userId, id);
+
+            if (accounttype is null)
+            {
+                return RedirectToAction("NotExists", "Home");
+            }
+
+            return View(accounttype);
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> Edit(AccountTypeModel accountType)
+        {
+
+            var userId = _usersService.GetUserId();
+            var accounttype = await _accountTypeService.GetAccountbyUserAndId(userId, accountType.Id);
+
+            if (accounttype is null)
+            {
+                return RedirectToAction("NotExists", "Home");
+            }
+
+            await _accountTypeService.UpdateAccount(accountType);
+
+            return RedirectToAction("Index");
+        }
     }
 }

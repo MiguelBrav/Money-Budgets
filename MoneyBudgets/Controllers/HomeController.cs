@@ -23,6 +23,12 @@ namespace MoneyBudgets.Controllers
             return View();
         }
 
+        public IActionResult NotExists()
+        {
+            return View();
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
