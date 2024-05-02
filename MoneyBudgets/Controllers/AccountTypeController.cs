@@ -104,5 +104,63 @@ namespace MoneyBudgets.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+
+        public async Task<IActionResult> Delete(int id)
+        {
+
+            var userId = _usersService.GetUserId();
+            var accounttype = await _accountTypeService.GetAccountbyUserAndId(userId, id);
+
+            if (accounttype is null)
+            {
+                return RedirectToAction("NotExists", "Home");
+            }
+
+            return View(accounttype);
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> DeleteAccountType(int id)
+        {
+
+            var userId = _usersService.GetUserId();
+            var accounttype = await _accountTypeService.GetAccountbyUserAndId(userId, id);
+
+            if (accounttype is null)
+            {
+                return RedirectToAction("NotExists", "Home");
+            }
+
+            await _accountTypeService.DeleteAccount(userId,id);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> OrderAccounts([FromBody] int[] ids)
+        {
+            var userId = _usersService.GetUserId();
+            List<AccountTypeModel> accounttypes = await _accountTypeService.GetAccountsbyUser(userId);
+
+            var accountsIdsToOrder = accounttypes.Select(x => x.Id);
+
+            var IdsNotSameUser = accountsIdsToOrder.Except(ids).ToList();
+
+            if(IdsNotSameUser.Count > 0)
+            {
+                return Forbid();
+            }
+
+            var accountsOrdered = ids.Select((value,index) => 
+            new AccountTypeModel() { Id = value, Order = index + 1}).AsEnumerable();
+
+            await _accountTypeService.OrderAccounts(accountsOrdered);
+
+            return Ok();
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace MoneyBudgets.Interfaces
         public Task<List<AccountTypeModel>> GetAccountsbyUser(int userId);
         public Task<AccountTypeModel> GetAccountbyUserAndId(int userId, int id);
         public Task UpdateAccount(AccountTypeModel account);
+        public Task DeleteAccount(int userId, int id);
+        public Task OrderAccounts(IEnumerable<AccountTypeModel> accounts);
     }
 }

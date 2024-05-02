@@ -25,8 +25,9 @@ namespace MoneyBudgets.Services
             {
                 connection.Open();
 
-                var id = await connection.QuerySingleAsync<int>(
-                    @"INSERT INTO AccountType ([Name], [UserId], [Order]) VALUES (@Name, @UserId, 0); SELECT SCOPE_IDENTITY();", account);
+                var id = await connection.QuerySingleAsync<int>("AccountType_Insert",
+                    new { userId = account.UserId, name = account.Name }, 
+                    commandType: System.Data.CommandType.StoredProcedure);
 
                 account.Id = id;
             }
@@ -71,7 +72,7 @@ namespace MoneyBudgets.Services
                     await connection.OpenAsync();
 
                     var accounts = await connection.QueryAsync<AccountTypeModel>(
-                        @"SELECT [Id],[Name],[UserId],[Order] FROM AccountType WHERE UserId = @UserId",
+                        @"SELECT [Id],[Name],[UserId],[Order] FROM AccountType WHERE UserId = @UserId Order By [Order] Asc",
                         new { UserId = userId });
 
                     return accounts.ToList();
@@ -95,7 +96,7 @@ namespace MoneyBudgets.Services
                         @"Update AccountType Set [Name] = @Name 
                         FROM AccountType Where Id = @Id ",
                          account);
-                    
+
                 }
                 catch (Exception)
                 {
@@ -115,7 +116,7 @@ namespace MoneyBudgets.Services
                     var account = await connection.QueryFirstOrDefaultAsync<AccountTypeModel>(
                         @"SELECT [Id],[Name],[UserId],[Order] FROM AccountType WHERE UserId = @UserId
                         and Id = @Id",
-                        new { UserId = userId , Id = id});
+                        new { UserId = userId, Id = id });
 
                     return account;
                 }
@@ -125,5 +126,46 @@ namespace MoneyBudgets.Services
                 }
             }
         }
+
+        public async Task DeleteAccount(int userId, int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    await connection.ExecuteAsync(
+                        @"DELETE AccountType WHERE UserId = @UserId  and Id = @Id",
+                        new { UserId = userId, Id = id });
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public async Task OrderAccounts(IEnumerable<AccountTypeModel> accountTypeOrdered)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var query = "UPDATE AccountType SET [Order] = @Order where Id = @Id";
+
+                    await connection.ExecuteAsync(query, accountTypeOrdered);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
     }
 }
