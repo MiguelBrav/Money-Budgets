@@ -16,3 +16,29 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.contain-totals {
+    display:flex;
+    justify-content: space-around;
+    font-size: 26px;
+    text-align: center;
+}
+
+.assets{
+    color: dodgerblue;
+}
+
+.liabilities{
+    color: darkred;
+}
+
+.acordeon-accounts ul li {
+    display: flex;
+    justify-content: space-between;
+}
+
+.acordeon-accounts button > span {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

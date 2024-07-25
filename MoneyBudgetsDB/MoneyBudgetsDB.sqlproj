@@ -58,7 +58,10 @@
     <Folder Include="Properties" />
     <Folder Include="dbo" />
     <Folder Include="dbo\Tables" />
-    <Folder Include="dbo\Release" />
+    <Folder Include="dbo\ScriptsRelease" />
+    <Folder Include="dbo\MySql" />
+    <Folder Include="dbo\MySql\ScriptsRelease" />
+    <Folder Include="dbo\SP" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\OperationType.sql" />
@@ -69,6 +72,8 @@
     <Build Include="dbo\Tables\Categories.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbo\Release\ScriptRelease.sql" />
+    <None Include="dbo\ScriptsRelease\ScriptRelease.sql" />
+    <None Include="dbo\MySql\ScriptsRelease\ScriptReleaseMySql.txt" />
+    <None Include="dbo\SP\AccountTypeInsert.sql" />
   </ItemGroup>
 </Project>
