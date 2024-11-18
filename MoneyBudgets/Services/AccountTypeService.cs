@@ -55,8 +55,8 @@ namespace MoneyBudgets.Services
                 }
                 else if (_dbType == "MySql")
                 {
-                    var id = await connection.QuerySingleAsync<int>("CALL AccountType_Insert(@userId, @name);",
-                        new { userId = account.UserId, name = account.Name });
+                    var id = await connection.QuerySingleAsync<int>("CALL AccountType_Insert(@Name,@UserId);",
+                        new { UserId = account.UserId, Name = account.Name });
 
                     account.Id = id;
                 }
@@ -153,7 +153,7 @@ namespace MoneyBudgets.Services
             }
         }
 
-        public async Task UpdateAccount(AccountTypeModel account)
+        public async Task UpdateAccountType(AccountTypeModel account)
         {
             //using (SqlConnection connection = new SqlConnection(_connectionString))
             using (IDbConnection connection = _createConnection.CreateConnectionSql(_connectionString, _dbType))
@@ -165,8 +165,9 @@ namespace MoneyBudgets.Services
 
                     var accounts = await connection.ExecuteAsync(
                         @"Update AccountType Set Name = @Name 
-                        FROM AccountType Where Id = @Id ",
+                         Where Id = @Id ",
                          account);
+
 
                 }
                 catch (Exception)
@@ -222,7 +223,7 @@ namespace MoneyBudgets.Services
             }
         }
 
-        public async Task DeleteAccount(int userId, int id)
+        public async Task DeleteAccountType(int userId, int id)
         {
             //using (SqlConnection connection = new SqlConnection(_connectionString))
             using (IDbConnection connection = _createConnection.CreateConnectionSql(_connectionString, _dbType))
@@ -232,9 +233,22 @@ namespace MoneyBudgets.Services
                     //await connection.OpenAsync();
                     connection.Open();
 
-                    await connection.ExecuteAsync(
-                        @"DELETE AccountType WHERE UserId = @UserId  and Id = @Id",
-                        new { UserId = userId, Id = id });
+                    //await connection.ExecuteAsync(
+                    //    @"DELETE AccountType WHERE UserId = @UserId  and Id = @Id",
+                    //    new { UserId = userId, Id = id });
+
+                    if (_dbType == "SqlServer")
+                    {
+                        await connection.ExecuteAsync(
+                            @"DELETE AccountType WHERE UserId = @UserId  and Id = @Id",
+                            new { UserId = userId, Id = id });
+                    }
+                    else if (_dbType == "MySql")
+                    {
+                        await connection.ExecuteAsync(
+                            @"DELETE FROM AccountType WHERE UserId = @UserId  and Id = @Id",
+                            new { UserId = userId, Id = id });
+                    }
 
                 }
                 catch (Exception)

@@ -100,7 +100,7 @@ namespace MoneyBudgets.Controllers
                 return RedirectToAction("NotExists", "Home");
             }
 
-            await _accountTypeService.UpdateAccount(accountType);
+            await _accountTypeService.UpdateAccountType(accountType);
 
             return RedirectToAction("Index");
         }
@@ -134,7 +134,16 @@ namespace MoneyBudgets.Controllers
                 return RedirectToAction("NotExists", "Home");
             }
 
-            await _accountTypeService.DeleteAccount(userId,id);
+            try
+            {
+                await _accountTypeService.DeleteAccountType(userId, id);
+            }
+            catch(Exception ex)
+            {
+                {
+                    TempData["error"] = "An error occurred: " + ex.Message;
+                }
+            }
 
             return RedirectToAction("Index");
         }

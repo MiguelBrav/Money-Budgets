@@ -9,8 +9,8 @@ namespace MoneyBudgets.Interfaces
         public Task<bool> ExistsAccount(string accountName, int userId);
         public Task<List<AccountTypeModel>> GetAccountsbyUser(int userId);
         public Task<AccountTypeModel> GetAccountbyUserAndId(int userId, int id);
-        public Task UpdateAccount(AccountTypeModel account);
-        public Task DeleteAccount(int userId, int id);
+        public Task UpdateAccountType(AccountTypeModel account);
+        public Task DeleteAccountType(int userId, int id);
         public Task OrderAccounts(IEnumerable<AccountTypeModel> accounts);
     }
 }
